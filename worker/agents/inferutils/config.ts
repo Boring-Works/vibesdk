@@ -58,10 +58,10 @@ Cloudflare AI Gateway unified billing for seamless model access without managing
 const PLATFORM_AGENT_CONFIG: AgentConfig = {
     ...COMMON_AGENT_CONFIGS,
     blueprint: {
-        name: AIModels.KIMI_K2_5, // 256K context, reasoning, vision
+        name: AIModels.CLAUDE_4_6_OPUS, // best reasoning for architecture decisions
         reasoning_effort: 'high',
         max_tokens: 20000,
-        fallbackModel: AIModels.NEMOTRON_3_120B,
+        fallbackModel: AIModels.KIMI_K2_5,
         temperature: 1.0,
     },
     projectSetup: {
@@ -94,11 +94,11 @@ const PLATFORM_AGENT_CONFIG: AgentConfig = {
         fallbackModel: AIModels.GLM_4_7_FLASH,
     },
     deepDebugger: {
-        name: AIModels.KIMI_K2_5, // reasoning for debugging
+        name: AIModels.CLAUDE_4_6_SONNET, // strong reasoning for root cause analysis
         reasoning_effort: 'high',
         max_tokens: 8000,
         temperature: 1,
-        fallbackModel: AIModels.NEMOTRON_3_120B,
+        fallbackModel: AIModels.KIMI_K2_5,
     },
     fileRegeneration: {
         name: AIModels.NEMOTRON_3_120B, // code-focused MoE

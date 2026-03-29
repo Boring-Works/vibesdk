@@ -156,6 +156,28 @@ const MODELS_MASTER = {
             contextSize: 200000, // 200K Context
         }
     },
+    CLAUDE_4_6_OPUS: {
+        id: '[openrouter]anthropic/claude-opus-4-6',
+        config: {
+            name: 'Claude Opus 4.6',
+            size: ModelSize.LARGE,
+            provider: 'openrouter',
+            creditCost: 24, // $6.00 input, $30.00 output
+            contextSize: 200000, // 200K Context
+            directOverride: true,
+        }
+    },
+    CLAUDE_4_6_SONNET: {
+        id: '[openrouter]anthropic/claude-sonnet-4-6',
+        config: {
+            name: 'Claude Sonnet 4.6',
+            size: ModelSize.LARGE,
+            provider: 'openrouter',
+            creditCost: 12, // $3.00 input, $15.00 output
+            contextSize: 200000, // 200K Context
+            directOverride: true,
+        }
+    },
     CLAUDE_4_5_HAIKU: {
         id: 'anthropic/claude-haiku-4-5',
         config: {
