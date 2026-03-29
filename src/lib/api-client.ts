@@ -381,8 +381,6 @@ class ApiClient {
                             throw new SecurityError(errorData.type, errorData.message);
                         }
                     }
-                    console.log("Came here");
-
                     throw new ApiError(
                         response.status,
                         response.statusText,

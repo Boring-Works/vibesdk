@@ -134,6 +134,11 @@ Edit `/worker/agents/operations/UserConversationProcessor.ts` (system prompt lin
 - Providers: `workers-ai,openrouter,google-vertex-ai`
 - Model config: `worker/agents/inferutils/config.ts` (defaults), `config.types.ts` (catalog)
 
+**Workers AI Prompt Caching:**
+- `x-session-affinity: {agentId}` header added to Workers AI calls
+- Pins consecutive requests to the same model instance for prefix cache hits
+- Reduces TTFT and gets discounted cached token pricing
+
 **Custom Icons:**
 - `src/components/icons/github.tsx` -- SVG replacement for lucide-react v1 (brand icons removed)
 

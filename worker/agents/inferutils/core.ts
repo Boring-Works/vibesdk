@@ -54,12 +54,9 @@ function accumulateToolCallDelta(
     // Look up existing entry by id or index
     if (idFromDelta && byId.has(idFromDelta)) {
         entry = byId.get(idFromDelta)!;
-        console.log(`[TOOL_CALL_DEBUG] Found existing entry by id: ${idFromDelta}`);
     } else if (idx !== undefined && byIndex.has(idx)) {
         entry = byIndex.get(idx)!;
-        console.log(`[TOOL_CALL_DEBUG] Found existing entry by index: ${idx}`);
     } else {
-        console.log(`[TOOL_CALL_DEBUG] Creating new entry - id: ${idFromDelta}, index: ${idx}`);
         // Create new entry
         const provisionalId = idFromDelta || synthIdForIndex(idx ?? byId.size);
         entry = {
@@ -117,16 +114,6 @@ function accumulateToolCallDelta(
         if (!isComplete) {
             entry.function.arguments += chunk;
 
-            // Debug logging for tool call argument accumulation
-            console.log(`[TOOL_CALL_DEBUG] Accumulating arguments for ${entry.function.name || 'unknown'}:`, {
-                id: entry.id,
-                index: entry.index,
-                before_length: before.length,
-                chunk_length: chunk.length,
-                chunk_content: chunk,
-                after_length: entry.function.arguments.length,
-                after_content: entry.function.arguments
-            });
         }
     }
 }
@@ -250,7 +237,6 @@ async function getApiKey(
 	_userId: string,
 	runtimeOverrides?: InferenceRuntimeOverrides,
 ): Promise<string> {
-    console.log("Getting API key for provider: ", provider);
 
     const runtimeKey = runtimeOverrides?.userApiKeys?.[provider];
     if (runtimeKey && isValidApiKey(runtimeKey)) {
@@ -565,12 +551,15 @@ export async function infer<OutputSchema extends z.AnyZodObject>({
             metadata.userId,
             runtimeOverrides,
         );
-        console.log(`baseUrl: ${baseURL}, modelName: ${modelName}`);
-
-        // Remove [*.] from model name
+        // Remove [*.] from model name (e.g. [openrouter] prefix)
         modelName = modelName.replace(/\[.*?\]/, '');
 
-        const client = new OpenAI({ apiKey, baseURL: baseURL, defaultHeaders });
+        // Add session affinity for Workers AI prompt caching
+        const sessionHeaders = modelConfig.provider === 'workers-ai'
+            ? { 'x-session-affinity': metadata.agentId }
+            : {};
+
+        const client = new OpenAI({ apiKey, baseURL: baseURL, defaultHeaders: { ...defaultHeaders, ...sessionHeaders } });
         const schemaObj =
             schema && schemaName && !format
                 ? { response_format: zodResponseFormat(schema, schemaName) }
@@ -587,7 +576,6 @@ export async function infer<OutputSchema extends z.AnyZodObject>({
 
         // Optimize messages to reduce token count
         const optimizedMessages = optimizeInputs(messages);
-        console.log(`Token optimization: Original messages size ~${JSON.stringify(messages).length} chars, optimized size ~${JSON.stringify(optimizedMessages).length} chars`);
 
         let messagesToPass = [...optimizedMessages];
         if (toolCallContext && toolCallContext.messages) {
@@ -739,11 +727,6 @@ export async function infer<OutputSchema extends z.AnyZodObject>({
                 for await (const event of response) {
                     const delta = (event as ChatCompletionChunk).choices[0]?.delta;
                     
-                    // Provider-specific logging
-                    const provider = modelName.split('/')[0];
-                    if (delta?.tool_calls && (provider === 'google-ai-studio' || provider === 'gemini')) {
-                        console.log(`[PROVIDER_DEBUG] ${provider} tool_calls delta:`, JSON.stringify(delta.tool_calls, null, 2));
-                    }
                     
                     if (delta?.tool_calls) {
                         try {
@@ -781,8 +764,7 @@ export async function infer<OutputSchema extends z.AnyZodObject>({
                     if (toolCall.function.arguments) {
                         try {
                             // Validate JSON arguments early for visibility
-                            const parsed = JSON.parse(toolCall.function.arguments);
-                            console.log(`[TOOL_CALL_VALIDATION] Successfully parsed arguments for ${toolCall.function.name}:`, parsed);
+                            JSON.parse(toolCall.function.arguments);
                         } catch (error) {
                             console.error(`[TOOL_CALL_VALIDATION] Invalid JSON in tool call arguments for ${toolCall.function.name}:`, {
                                 error: error instanceof Error ? error.message : String(error),
@@ -859,7 +841,7 @@ export async function infer<OutputSchema extends z.AnyZodObject>({
         */
 
         if (executedToolCalls.length) {
-            console.log(`Tool calls executed:`, JSON.stringify(executedToolCalls, null, 2));
+            console.log(`Tool calls executed: ${executedToolCalls.map(tc => tc.name).join(', ')}`);
 
             const newToolCallContext = updateToolCallContext(toolCallContext, assistantMessage, executedToolCalls, completionConfig?.detector);
 
