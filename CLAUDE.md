@@ -141,6 +141,12 @@ Edit `/worker/agents/operations/UserConversationProcessor.ts` (system prompt lin
 - `x-session-affinity: {agentId}` header added to Workers AI calls
 - Pins consecutive requests to the same model instance for prefix cache hits
 - Reduces TTFT and gets discounted cached token pricing
+- Note: not documented for AI Gateway, may be no-op (see DEBT.md D2)
+
+**Inference Safety:**
+- Truncation detection: `[TRUNCATION]` logged when `finish_reason === 'length'` (streaming + non-streaming)
+- Abort signal checked before each retry attempt and after backoff delay in infer.ts
+- deleteApp uses D1 atomic `batch()` with `.returning()` for typed results
 
 **Custom Icons:**
 - `src/components/icons/github.tsx` -- SVG replacement for lucide-react v1 (brand icons removed)
