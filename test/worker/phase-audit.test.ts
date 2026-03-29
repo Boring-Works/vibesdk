@@ -135,3 +135,42 @@ describe('Phase Audit: Model ID Format Validation', () => {
 		}
 	});
 });
+
+describe('Phase Audit: Auth & Safety', () => {
+	it('ALLOWED_EMAILS parsing handles empty string', () => {
+		const raw = '';
+		const result = (raw || '').split(',').map(e => e.trim()).filter(Boolean);
+		expect(result).toEqual([]);
+		expect(result.length).toBe(0); // empty = whitelist disabled
+	});
+
+	it('ALLOWED_EMAILS parsing handles comma-separated list', () => {
+		const raw = 'a@b.com, c@d.com ,e@f.com';
+		const result = (raw || '').split(',').map(e => e.trim()).filter(Boolean);
+		expect(result).toEqual(['a@b.com', 'c@d.com', 'e@f.com']);
+		expect(result.includes('a@b.com')).toBe(true);
+		expect(result.includes('hacker@evil.com')).toBe(false);
+	});
+
+	it('ALLOWED_EMAILS parsing handles trailing commas and spaces', () => {
+		const raw = 'a@b.com,,, ,c@d.com,';
+		const result = (raw || '').split(',').map(e => e.trim()).filter(Boolean);
+		expect(result).toEqual(['a@b.com', 'c@d.com']);
+	});
+
+	it('OpenRouter model IDs must have directOverride to bypass gateway', () => {
+		for (const [key, id] of Object.entries(AIModels)) {
+			if (typeof id !== 'string' || !id.includes('[openrouter]')) continue;
+			const config = AI_MODEL_CONFIG[id as keyof typeof AI_MODEL_CONFIG];
+			expect(config?.directOverride, `${key} routes via OpenRouter but missing directOverride`).toBe(true);
+		}
+	});
+
+	it('Workers AI models should NOT have directOverride', () => {
+		for (const [key, id] of Object.entries(AIModels)) {
+			if (typeof id !== 'string' || !id.startsWith('workers-ai/')) continue;
+			const config = AI_MODEL_CONFIG[id as keyof typeof AI_MODEL_CONFIG];
+			expect(config?.directOverride, `${key} is Workers AI but has directOverride set`).toBeFalsy();
+		}
+	});
+});
