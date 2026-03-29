@@ -412,6 +412,56 @@ const MODELS_MASTER = {
             contextSize: 131072, // 128K Context
         }
     },
+    GRANITE_4_MICRO: {
+        id: 'workers-ai/@cf/ibm-granite/granite-4.0-h-micro',
+        config: {
+            name: 'Granite 4.0 Micro',
+            size: ModelSize.LITE,
+            provider: 'workers-ai',
+            creditCost: 0.07, // $0.017/M input, $0.112/M output -- cheapest in catalog
+            contextSize: 131072, // 131K Context
+        }
+    },
+    QWEN2_5_CODER_32B: {
+        id: 'workers-ai/@cf/qwen/qwen2.5-coder-32b-instruct',
+        config: {
+            name: 'Qwen2.5 Coder 32B',
+            size: ModelSize.REGULAR,
+            provider: 'workers-ai',
+            creditCost: 1.0, // $0.66/M input, $1.00/M output
+            contextSize: 32768, // 32K Context
+        }
+    },
+    MISTRAL_SMALL_31: {
+        id: 'workers-ai/@cf/mistralai/mistral-small-3.1-24b-instruct',
+        config: {
+            name: 'Mistral Small 3.1',
+            size: ModelSize.REGULAR,
+            provider: 'workers-ai',
+            creditCost: 0.5, // $0.35/M input, $0.56/M output
+            contextSize: 131072, // 128K Context
+        }
+    },
+    DEEPSEEK_R1_DISTILL: {
+        id: 'workers-ai/@cf/deepseek-ai/deepseek-r1-distill-qwen-32b',
+        config: {
+            name: 'DeepSeek R1 Distill 32B',
+            size: ModelSize.LARGE,
+            provider: 'workers-ai',
+            creditCost: 3.0, // $0.497/M input, $4.881/M output
+            contextSize: 81920, // 80K Context
+        }
+    },
+    GPT_OSS_20B: {
+        id: 'workers-ai/@cf/openai/gpt-oss-20b',
+        config: {
+            name: 'GPT-OSS 20B',
+            size: ModelSize.LITE,
+            provider: 'workers-ai',
+            creditCost: 0.3, // $0.20/M input, $0.30/M output
+            contextSize: 131072, // 128K Context
+        }
+    },
     QWEN_3_CODER_480B: {
         id: 'google-vertex-ai/qwen/qwen3-coder-480b-a35b-instruct-maas',
         config: {

@@ -41,11 +41,13 @@ const COMMON_AGENT_CONFIGS = {
     },
 } as const;
 
+// No longer used -- each agent has its own config with doc-recommended temps
+// Kept for DEFAULT_AGENT_CONFIG only
 const SHARED_IMPLEMENTATION_CONFIG = {
     reasoning_effort: 'low' as const,
     max_tokens: 48000,
     temperature: 1,
-    fallbackModel: AIModels.NEMOTRON_3_120B,
+    fallbackModel: AIModels.GEMINI_2_5_PRO,
 };
 
 //======================================================================================
@@ -55,90 +57,144 @@ const SHARED_IMPLEMENTATION_CONFIG = {
 //======================================================================================
 const PLATFORM_AGENT_CONFIG: AgentConfig = {
     ...COMMON_AGENT_CONFIGS,
-    // Override common configs with Workers AI models for platform
-    screenshotAnalysis: {
-        name: AIModels.KIMI_K2_5, // vision + reasoning
-        reasoning_effort: 'medium' as const,
-        max_tokens: 8000,
-        temperature: 1,
-        fallbackModel: AIModels.LLAMA_4_SCOUT,
-    },
-    realtimeCodeFixer: {
-        name: AIModels.GLM_4_7_FLASH, // fast, catches issues during generation
-        reasoning_effort: 'low' as const,
-        max_tokens: 32000,
-        temperature: 0.2,
-        fallbackModel: AIModels.QWEN3_30B,
-    },
-    fastCodeFixer: {
-        name: AIModels.QWEN3_30B, // cheapest model with tool calling
-        reasoning_effort: 'low' as const,
-        max_tokens: 64000,
-        temperature: 0.0,
-        fallbackModel: AIModels.GLM_4_7_FLASH,
-    },
+    // --- Temperatures from each model creator's official docs ---
+    // --- Best model per task, second-best as fallback ---
+
+    // TEMPLATE SELECTION: needs speed + tool calling, not intelligence
+    // Granite Micro: cheapest ($0.017/M), 131K, industry-leading tool calling at 3B
+    // IBM docs: temp 0.0 for deterministic task-focused work
     templateSelection: {
-        name: AIModels.GLM_4_7_FLASH,
+        name: AIModels.GRANITE_4_MICRO,
         max_tokens: 2000,
-        fallbackModel: AIModels.QWEN3_30B,
-        temperature: 1,
+        fallbackModel: AIModels.GLM_4_7_FLASH,
+        temperature: 0.0,
     },
+
+    // BLUEPRINT: needs best reasoning for architecture decisions
+    // Opus 4.6 via OpenRouter: strongest reasoning model available
     blueprint: {
-        name: AIModels.CLAUDE_4_6_OPUS, // best reasoning for architecture decisions
+        name: AIModels.CLAUDE_4_6_OPUS,
         reasoning_effort: 'high',
         max_tokens: 20000,
-        fallbackModel: AIModels.KIMI_K2_5,
-        temperature: 1.0,
+        fallbackModel: AIModels.GPT_OSS_120B, // near o4-mini reasoning, 128K, $0.35/M
+        temperature: 1.0, // OpenAI reasoning models need full distribution
     },
+
+    // PROJECT SETUP: needs tool calling + multi-step orchestration
+    // Nemotron 3: hybrid MoE, multi-agent orchestration, 50% faster throughput
+    // NVIDIA docs: temp 0.6 for tool calling
     projectSetup: {
-        name: AIModels.NEMOTRON_3_120B, // tool calling, fast
+        name: AIModels.NEMOTRON_3_120B,
         reasoning_effort: 'medium',
         max_tokens: 8000,
-        temperature: 1,
         fallbackModel: AIModels.KIMI_K2_5,
+        temperature: 0.6,
     },
+
+    // PHASE GENERATION: needs 256K context for full codebase + reasoning for planning
+    // Kimi K2.5: 256K context, reasoning, tool calling
+    // Moonshot docs: temp 0.6 for Instant mode (code planning)
     phaseGeneration: {
         name: AIModels.KIMI_K2_5,
         reasoning_effort: 'medium',
         max_tokens: 8000,
-        temperature: 1,
-        fallbackModel: AIModels.GLM_4_7_FLASH,
+        fallbackModel: AIModels.GPT_OSS_120B,
+        temperature: 0.6,
     },
+
+    // PHASE IMPLEMENTATION: needs large context + strong code generation
+    // Kimi K2.5: 256K for full codebase context during implementation
+    // Moonshot docs: temp 0.6 for code generation
     firstPhaseImplementation: {
-        name: AIModels.KIMI_K2_5, // 256K for large initial codegen
-        ...SHARED_IMPLEMENTATION_CONFIG,
+        name: AIModels.KIMI_K2_5,
+        reasoning_effort: 'low',
+        max_tokens: 48000,
+        fallbackModel: AIModels.NEMOTRON_3_120B,
+        temperature: 0.6,
     },
     phaseImplementation: {
         name: AIModels.KIMI_K2_5,
-        ...SHARED_IMPLEMENTATION_CONFIG,
+        reasoning_effort: 'low',
+        max_tokens: 48000,
+        fallbackModel: AIModels.NEMOTRON_3_120B,
+        temperature: 0.6,
     },
+
+    // CONVERSATIONAL: needs speed + quality for user-facing chat
+    // GLM Flash: fast, cheap ($0.06/M), 131K, reasoning, multilingual
+    // Zhipu docs: temp 0.7 for agentic/coding conversations
     conversationalResponse: {
-        name: AIModels.KIMI_K2_5, // best quality for user-facing chat
+        name: AIModels.GLM_4_7_FLASH,
         reasoning_effort: 'low',
         max_tokens: 4000,
-        temperature: 1,
-        fallbackModel: AIModels.GLM_4_7_FLASH,
+        fallbackModel: AIModels.MISTRAL_SMALL_31, // 128K, vision, 150 tok/s
+        temperature: 0.7,
     },
+
+    // DEEP DEBUGGER: needs strongest reasoning for root cause analysis
+    // Sonnet 4.6 via OpenRouter: strong code reasoning
+    // Fallback: DeepSeek R1 Distill -- outperforms o1-mini on reasoning benchmarks
     deepDebugger: {
-        name: AIModels.CLAUDE_4_6_SONNET, // strong reasoning for root cause analysis
+        name: AIModels.CLAUDE_4_6_SONNET,
         reasoning_effort: 'high',
         max_tokens: 8000,
-        temperature: 1,
-        fallbackModel: AIModels.KIMI_K2_5,
+        fallbackModel: AIModels.DEEPSEEK_R1_DISTILL, // SOTA 32B reasoning
+        temperature: 0.6, // DeepSeek docs: 0.5-0.7 for reasoning
     },
+
+    // FILE REGENERATION: needs purpose-built code generation
+    // Qwen2.5 Coder 32B: built specifically for code gen/repair
+    // Qwen docs: temp 0.7 for creative code solutions
     fileRegeneration: {
-        name: AIModels.NEMOTRON_3_120B, // code-focused MoE
+        name: AIModels.QWEN2_5_CODER_32B,
         reasoning_effort: 'low',
         max_tokens: 16000,
-        temperature: 0.0,
-        fallbackModel: AIModels.GLM_4_7_FLASH,
+        fallbackModel: AIModels.GPT_OSS_120B,
+        temperature: 0.7,
     },
+
+    // REALTIME CODE FIXER: needs speed + SWE-bench quality
+    // GLM Flash: SWE-bench leader in 30B class, fast
+    // Zhipu docs: temp 0.7 for SWE-bench config
+    realtimeCodeFixer: {
+        name: AIModels.GLM_4_7_FLASH,
+        reasoning_effort: 'low' as const,
+        max_tokens: 32000,
+        fallbackModel: AIModels.QWEN3_30B,
+        temperature: 0.7,
+    },
+
+    // FAST CODE FIXER: needs cheapest + fastest tool calling
+    // Granite Micro: cheapest in catalog ($0.017/M), 131K, top tool calling at 3B
+    // IBM docs: temp 0.0 for code/FIM
+    fastCodeFixer: {
+        name: AIModels.GRANITE_4_MICRO,
+        reasoning_effort: undefined,
+        max_tokens: 64000,
+        fallbackModel: AIModels.GLM_4_7_FLASH,
+        temperature: 0.0,
+    },
+
+    // SCREENSHOT ANALYSIS: needs vision + reasoning
+    // Kimi K2.5: best vision (MoonViT 400M), 256K, reasoning
+    // Moonshot docs: temp 0.6 for analysis
+    screenshotAnalysis: {
+        name: AIModels.KIMI_K2_5,
+        reasoning_effort: 'medium' as const,
+        max_tokens: 8000,
+        fallbackModel: AIModels.MISTRAL_SMALL_31, // vision + 128K + fast
+        temperature: 0.6,
+    },
+
+    // AGENTIC PROJECT BUILDER: needs tool calling + 256K + reasoning
+    // Kimi K2.5: frontier tool calling, 256K, reasoning, vision
+    // Moonshot docs: temp 0.6 for agent mode
     agenticProjectBuilder: {
-        name: AIModels.KIMI_K2_5, // tool calling + 256K
+        name: AIModels.KIMI_K2_5,
         reasoning_effort: 'medium',
         max_tokens: 8000,
-        temperature: 1,
         fallbackModel: AIModels.NEMOTRON_3_120B,
+        temperature: 0.6,
     },
 };
 
