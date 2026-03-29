@@ -155,31 +155,35 @@ export default function SettingsPage() {
 		(key: string) => {
 			const descriptions: Record<string, string> = {
 				templateSelection:
-					'Quick template selection - Needs to be extremely fast with low latency. Intelligence level is less important than speed for rapid project bootstrapping.',
+					'Picks the best starter template for your project. Runs once at the start. Speed matters, intelligence does not.',
 				blueprint:
-					'Project architecture & UI design - Requires strong design thinking, UI/UX understanding, and architectural planning skills. Speed is important but coding ability is not critical.',
+					'Designs your app architecture, UI layout, data flow, and implementation roadmap. The most important step -- a better blueprint means a better app.',
 				projectSetup:
-					'Technical scaffolding setup - Must excel at following technical instructions precisely and setting up proper project structure. Reliability and instruction-following are key.',
+					'Installs dependencies and configures the development environment. Needs precise tool calling and instruction following.',
 				phaseGeneration:
-					'Development phase planning - Needs rapid planning abilities with large context windows for understanding project scope. Quick thinking is essential, coding skills are not required.',
+					'Plans what files to create or modify in each development phase. Needs large context to see the full codebase.',
 				firstPhaseImplementation:
-					'Initial development phase - Requires large context windows and excellent coding skills for implementing the foundation. Deep thinking is less critical than execution.',
+					'Writes the initial code foundation. Needs large context windows and strong coding ability.',
 				phaseImplementation:
-					'Subsequent development phases - Needs large context windows and superior coding abilities for complex feature implementation. Focus is on execution rather than reasoning.',
+					'Writes code for subsequent phases. Builds on existing files with full project context.',
 				realtimeCodeFixer:
-					'Real-time bug detection - Must be extremely fast at identifying and fixing code issues with strong debugging skills. Large context windows are not needed, speed is crucial.',
+					'Catches and fixes bugs in real-time as files are generated. Runs in parallel with code generation.',
 				fastCodeFixer:
-					'Ultra-fast code fixes - Optimized for maximum speed with decent coding ability. No deep thinking or large context required, pure speed and basic bug fixing.',
+					'Runs lint-based fixes after each phase deploys. Catches syntax errors and common issues quickly.',
 				conversationalResponse:
-					'User chat interactions - Handles natural conversation flow and user communication. Balanced capabilities for engaging dialogue and helpful responses.',
+					'Responds to your chat messages. Needs to be fast and helpful for back-and-forth conversation.',
+				deepDebugger:
+					'Diagnoses and fixes complex bugs. Uses reasoning to trace root causes across multiple files.',
+				agenticProjectBuilder:
+					'Autonomous agent that plans and builds the entire project using tool calling. Powers presentation and general modes.',
 				userSuggestionProcessor:
-					'User feedback processing - Analyzes and implements user suggestions and feedback. Requires understanding user intent and translating to actionable changes.',
+					'Processes your feedback and suggestions to improve the generated code.',
 				codeReview:
-					'Code quality analysis - Needs large context windows, strong analytical thinking, and good speed for thorough code review. Must identify issues and suggest improvements.',
+					'Reviews generated code for bugs, performance issues, and best practices.',
 				fileRegeneration:
-					'File recreation - Focused on pure coding ability to regenerate or rewrite files. No context window or deep thinking required, just excellent code generation.',
+					'Rewrites individual files from scratch. Needs strong code generation, not large context.',
 				screenshotAnalysis:
-					'UI/design analysis - Analyzes visual designs and screenshots to understand UI requirements. Requires visual understanding and design interpretation skills.',
+					'Analyzes screenshots of your app to find visual bugs and UI issues. Requires vision capability.',
 			};
 			return (
 				descriptions[key] ||

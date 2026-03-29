@@ -101,6 +101,7 @@ export function categorizeAgent(agentKey: string): string {
 		'deepDebugger': 'debugging',
 
 		// Advanced
+		'agenticProjectBuilder': 'advanced',
 		'screenshotAnalysis': 'advanced',
 	};
 

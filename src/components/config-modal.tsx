@@ -63,18 +63,20 @@ const hasUserKeyForModel = (modelName: string, byokProviders: Array<{ provider: 
 // Model recommendations by agent
 const getModelRecommendation = (agentAction: string) => {
   const recommendations: Record<string, string> = {
-    templateSelection: 'Recommended: Fast models for quick template selection',
-    blueprint: 'Recommended: Creative models for architecture design',
-    projectSetup: 'Recommended: Reliable models for precise setup',
-    phaseGeneration: 'Recommended: Large context models for comprehensive planning',
-    firstPhaseImplementation: 'Recommended: High-capability models for foundation development',
-    phaseImplementation: 'Recommended: Strong coding models for implementation',
-    realtimeCodeFixer: 'Recommended: Fast debugging models',
-    fastCodeFixer: 'Recommended: Ultra-fast models for quick fixes',
-    conversationalResponse: 'Recommended: Balanced models for natural conversation',
-    codeReview: 'Recommended: Analytical models with large context',
-    fileRegeneration: 'Recommended: Pure coding models',
-    screenshotAnalysis: 'Recommended: Vision-capable models for image analysis'
+    templateSelection: 'Best with: fastest, cheapest model with tool calling',
+    blueprint: 'Best with: strongest reasoning model available',
+    projectSetup: 'Best with: model with strong tool calling and instruction following',
+    phaseGeneration: 'Best with: large context (128K+) model with reasoning',
+    firstPhaseImplementation: 'Best with: large context (128K+) model with strong coding',
+    phaseImplementation: 'Best with: large context model with strong coding',
+    realtimeCodeFixer: 'Best with: fast model with good code analysis',
+    fastCodeFixer: 'Best with: fastest, cheapest model with tool calling',
+    conversationalResponse: 'Best with: fast, balanced model for natural chat',
+    deepDebugger: 'Best with: strongest reasoning model for root cause analysis',
+    agenticProjectBuilder: 'Best with: large context model with tool calling and reasoning',
+    codeReview: 'Best with: reasoning model with large context',
+    fileRegeneration: 'Best with: model specialized in code generation',
+    screenshotAnalysis: 'Best with: vision-capable model with reasoning',
   };
   return recommendations[agentAction] || '';
 };
