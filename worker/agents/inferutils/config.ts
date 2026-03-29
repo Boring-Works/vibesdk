@@ -71,12 +71,12 @@ const PLATFORM_AGENT_CONFIG: AgentConfig = {
     },
 
     // BLUEPRINT: needs best reasoning for architecture decisions
-    // Opus 4.6 via OpenRouter: strongest reasoning model available
+    // GPT-OSS 120B: near o4-mini reasoning, 128K context, $0.35/M input -- FREE on Workers AI
     blueprint: {
-        name: AIModels.CLAUDE_4_6_OPUS,
+        name: AIModels.GPT_OSS_120B,
         reasoning_effort: 'high',
         max_tokens: 20000,
-        fallbackModel: AIModels.GPT_OSS_120B, // near o4-mini reasoning, 128K, $0.35/M
+        fallbackModel: AIModels.KIMI_K2_5, // 256K fallback
         temperature: 1.0, // OpenAI reasoning models need full distribution
     },
 
@@ -132,13 +132,12 @@ const PLATFORM_AGENT_CONFIG: AgentConfig = {
     },
 
     // DEEP DEBUGGER: needs strongest reasoning for root cause analysis
-    // Sonnet 4.6 via OpenRouter: strong code reasoning
-    // Fallback: DeepSeek R1 Distill -- outperforms o1-mini on reasoning benchmarks
+    // DeepSeek R1 Distill: outperforms o1-mini, 80K context -- FREE on Workers AI
     deepDebugger: {
-        name: AIModels.CLAUDE_4_6_SONNET,
+        name: AIModels.DEEPSEEK_R1_DISTILL,
         reasoning_effort: 'high',
         max_tokens: 8000,
-        fallbackModel: AIModels.DEEPSEEK_R1_DISTILL, // SOTA 32B reasoning
+        fallbackModel: AIModels.GPT_OSS_120B,
         temperature: 0.6, // DeepSeek docs: 0.5-0.7 for reasoning
     },
 
