@@ -20,10 +20,11 @@ vibesdk is an AI-powered full-stack application generation platform built on Clo
 **Tech Stack:**
 - Frontend: React 19, TypeScript, Vite, TailwindCSS, React Router v7
 - Backend: Cloudflare Workers, Durable Objects, D1 (SQLite)
-- AI/LLM: OpenAI, Anthropic, Google AI Studio (Gemini), Kimi K2.5, NVIDIA Nemotron, GLM
+- AI/LLM: Workers AI (Kimi K2.5, Nemotron 3, GLM 4.7, Qwen3, Llama 4 Scout, GPT-OSS) + OpenRouter (Claude 4.6 Opus/Sonnet) for high-impact agents
 - WebSocket: PartySocket for real-time communication
-- Sandbox: Custom container service with CLI tools
+- Sandbox: Custom container service (CF Containers, 4 vCPU, 12GB RAM)
 - Git: isomorphic-git with SQLite filesystem
+- ORM: Drizzle 0.45.2, Agents SDK 0.8.7, OpenAI SDK 6.33.0
 
 **Project Structure**
 
@@ -118,10 +119,23 @@ Edit `/worker/agents/operations/UserConversationProcessor.ts` (system prompt lin
 
 **Deep Debugger:**
 - Location: `/worker/agents/assistants/codeDebugger.ts`
-- Model: Gemini 2.5 Pro (reasoning_effort: high, 32k tokens)
+- Model: Claude Sonnet 4.6 via OpenRouter (reasoning_effort: high, 8k tokens), fallback Kimi K2.5
 - Diagnostic priority: run_analysis → get_runtime_errors → get_logs
 - Can fix multiple files in parallel (regenerate_file)
 - Cannot run during code generation (checked via isCodeGenerating())
+
+**Model Strategy (PLATFORM_AGENT_CONFIG):**
+- Blueprint: Claude Opus 4.6 (OpenRouter) -- architecture decisions, highest quality
+- Deep Debugger: Claude Sonnet 4.6 (OpenRouter) -- root cause analysis
+- Phase Gen/Impl, Chat, Agentic: Kimi K2.5 (Workers AI) -- 256K, reasoning, vision
+- Project Setup, File Regen: Nemotron 3 120B (Workers AI) -- MoE, tool calling
+- Template Selection, Code Fixer: GLM 4.7 Flash (Workers AI) -- fast, cheap
+- Cheap options available: Qwen3 30B ($0.05/M), Llama 4 Scout (vision)
+- Providers: `workersai,openrouter,google-vertex-ai`
+- Model config: `worker/agents/inferutils/config.ts` (defaults), `config.types.ts` (catalog)
+
+**Custom Icons:**
+- `src/components/icons/github.tsx` -- SVG replacement for lucide-react v1 (brand icons removed)
 
 **User Secrets Store (Durable Object):**
 - Location: `/worker/services/secrets/`

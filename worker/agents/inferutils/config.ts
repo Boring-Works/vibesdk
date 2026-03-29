@@ -48,13 +48,10 @@ const SHARED_IMPLEMENTATION_CONFIG = {
 };
 
 //======================================================================================
-// ATTENTION! Platform config requires specific API keys and Cloudflare AI Gateway setup.
+// Platform config for build.getboring.io
+// Workers AI models (free) + OpenRouter (Claude 4.6) for high-impact agents
+// Requires PLATFORM_MODEL_PROVIDERS env var to activate
 //======================================================================================
-/* 
-These are the configs used at build.cloudflare.dev 
-You may need to provide API keys for these models in your environment or use 
-Cloudflare AI Gateway unified billing for seamless model access without managing multiple keys.
-*/
 const PLATFORM_AGENT_CONFIG: AgentConfig = {
     ...COMMON_AGENT_CONFIGS,
     blueprint: {
