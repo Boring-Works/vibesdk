@@ -1014,16 +1014,18 @@ export class AppService extends BaseService {
             }
 
             // Atomic cascade delete using D1 batch
+            // The last statement uses .returning() so we get a typed array back
             const batchResult = await this.database.batch([
                 this.database.delete(schema.favorites).where(eq(schema.favorites.appId, appId)),
                 this.database.delete(schema.stars).where(eq(schema.stars.appId, appId)),
                 this.database.delete(schema.appViews).where(eq(schema.appViews.appId, appId)),
                 this.database.update(schema.apps).set({ parentAppId: null }).where(eq(schema.apps.parentAppId, appId)),
-                this.database.delete(schema.apps).where(and(eq(schema.apps.id, appId), eq(schema.apps.userId, userId))),
+                this.database.delete(schema.apps).where(and(eq(schema.apps.id, appId), eq(schema.apps.userId, userId))).returning({ id: schema.apps.id }),
             ]);
 
-            const deleteResult = batchResult[4] as unknown as { id: string }[];
-            if (!deleteResult || !Array.isArray(deleteResult) || deleteResult.length === 0) {
+            // batchResult[4] is typed as { id: string }[] from the .returning() clause
+            const deleteResult = batchResult[4];
+            if (!deleteResult || deleteResult.length === 0) {
                 return { success: false, error: 'Failed to delete app - app may have been already deleted' };
             }
 

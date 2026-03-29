@@ -719,15 +719,16 @@ export async function infer<OutputSchema extends z.AnyZodObject>({
             // If streaming is enabled, handle the stream response
             if (response instanceof Stream) {
                 let streamIndex = 0;
+                let lastFinishReason: string | null = null;
                 // Accumulators for tool calls: by index (preferred) and by id (fallback when index is missing)
                 const byIndex = new Map<number, ToolAccumulatorEntry>();
                 const byId = new Map<string, ToolAccumulatorEntry>();
                 const orderCounterRef = { value: 0 };
-                
+
                 for await (const event of response) {
                     const delta = (event as ChatCompletionChunk).choices[0]?.delta;
-                    
-                    
+
+
                     if (delta?.tool_calls) {
                         try {
                             for (const deltaToolCall of delta.tool_calls as ToolCallsArray) {
@@ -742,10 +743,16 @@ export async function infer<OutputSchema extends z.AnyZodObject>({
                     content += delta?.content || '';
                     const slice = content.slice(streamIndex);
                     const finishReason = (event as ChatCompletionChunk).choices[0]?.finish_reason;
+                    if (finishReason != null) lastFinishReason = finishReason;
                     if (slice.length >= stream.chunk_size || finishReason != null) {
                         stream.onChunk(slice);
                         streamIndex += slice.length;
                     }
+                }
+
+                // Detect truncation: finish_reason 'length' means max_tokens was hit
+                if (lastFinishReason === 'length') {
+                    console.warn(`[TRUNCATION] Model output truncated by max_tokens limit. Action: ${actionKey}, Model: ${modelName}, Content length: ${content.length} chars`);
                 }
                 
                 // Assemble toolCalls with preference for index ordering, else first-seen order
@@ -796,9 +803,11 @@ export async function infer<OutputSchema extends z.AnyZodObject>({
                 console.warn(`[TOOL_CALL_WARNING] Dropping ${droppedNonStream.length} non-stream tool_call(s) without function name`, droppedNonStream);
             }
             toolCalls = allToolCalls.filter(tc => tc.function.name && tc.function.name.trim() !== '');
-            // Also print the total number of tokens used in the prompt
-            const totalTokens = (response as OpenAI.ChatCompletion).usage?.total_tokens;
-            console.log(`Total tokens used in prompt: ${totalTokens}`);
+            const completion = response as OpenAI.ChatCompletion;
+            const nonStreamFinishReason = completion.choices[0]?.finish_reason;
+            if (nonStreamFinishReason === 'length') {
+                console.warn(`[TRUNCATION] Model output truncated by max_tokens limit. Action: ${actionKey}, Model: ${modelName}, Content length: ${content.length} chars, Tokens: ${completion.usage?.total_tokens}`);
+            }
         }
 
         const assistantMessage = { role: "assistant" as MessageRole, content, tool_calls: toolCalls };
