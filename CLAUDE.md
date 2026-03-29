@@ -11,10 +11,16 @@ This file provides guidance to Claude Code when working with code in this reposi
 ## Project Overview
 vibesdk is an AI-powered full-stack application generation platform built on Cloudflare infrastructure.
 
+**Deployment:**
+- Worker name: `boringbuilder`
+- Domain: `build.getboring.io`
+- Fork: `Boring-Works/vibesdk` (upstream: `cloudflare/vibesdk`)
+- Git remotes: `origin` (cloudflare upstream), `boring` (our fork)
+
 **Tech Stack:**
 - Frontend: React 19, TypeScript, Vite, TailwindCSS, React Router v7
 - Backend: Cloudflare Workers, Durable Objects, D1 (SQLite)
-- AI/LLM: OpenAI, Anthropic, Google AI Studio (Gemini)
+- AI/LLM: OpenAI, Anthropic, Google AI Studio (Gemini), Kimi K2.5, NVIDIA Nemotron, GLM
 - WebSocket: PartySocket for real-time communication
 - Sandbox: Custom container service with CLI tools
 - Git: isomorphic-git with SQLite filesystem

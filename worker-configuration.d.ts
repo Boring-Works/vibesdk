@@ -7,12 +7,15 @@ declare namespace Cloudflare {
 	}
 	interface Env {
 		VibecoderStore: KVNamespace;
-		TEMPLATES_REPOSITORY: "https://github.com/cloudflare/vibesdk-templates";
-		ALLOWED_EMAIL: "";
-		DISPATCH_NAMESPACE: "vibesdk-default-namespace";
-		ENABLE_READ_REPLICAS: "true";
-		CLOUDFLARE_AI_GATEWAY: "vibesdk-gateway";
-		PLATFORM_CAPABILITIES: {"features":{"app":{"enabled":true},"presentation":{"enabled":false},"general":{"enabled":false}},"version":"1.0.0"};
+		TEMPLATES_REPOSITORY: "https://github.com/Boring-Works/vibesdk-templates";
+		ALLOWED_EMAILS: string;
+		DISPATCH_NAMESPACE: "boringbuilder-apps";
+		ENABLE_READ_REPLICAS: string;
+		CLOUDFLARE_AI_GATEWAY: "boringbuilder_gateway";
+		PLATFORM_MODEL_PROVIDERS: string;
+		PLATFORM_CAPABILITIES: {"features":{"app":{"enabled":true},"presentation":{"enabled":true},"general":{"enabled":false}},"version":"1.0.0"};
+		CUSTOM_PREVIEW_DOMAIN: string;
+		WORKERS_DEV_HOSTNAME: string;
 		ANTHROPIC_API_KEY: string;
 		OPENAI_API_KEY: string;
 		GOOGLE_AI_STUDIO_API_KEY: string;
