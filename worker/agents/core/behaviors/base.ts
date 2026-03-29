@@ -325,8 +325,8 @@ export abstract class BaseCodingBehavior<TState extends BaseProjectState>
         
         return {
             metadata: this.state.metadata,
-            enableFastSmartCodeFix: false,  // TODO: Do we want to enable it via some config?
-            enableRealtimeCodeFix: false,   // TODO: Do we want to enable it via some config?
+            enableFastSmartCodeFix: true,
+            enableRealtimeCodeFix: true,
             abortSignal: controller.signal,
             userModelConfigs: this.getUserModelConfigs(),
             runtimeOverrides: this.getRuntimeOverrides(),

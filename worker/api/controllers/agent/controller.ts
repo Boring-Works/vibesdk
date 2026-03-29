@@ -131,8 +131,8 @@ export class CodingAgentController extends BaseController {
                 },
                 userModelConfigs,
                 runtimeOverrides,
-                enableRealtimeCodeFix: false, // This costs us too much, so disabled it for now
-                enableFastSmartCodeFix: false,
+                enableRealtimeCodeFix: true,
+                enableFastSmartCodeFix: true,
             }
                                 
             this.logger.info(`Initialized inference context for user ${user.id}`, {

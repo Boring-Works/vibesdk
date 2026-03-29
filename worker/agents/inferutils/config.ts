@@ -64,11 +64,18 @@ const PLATFORM_AGENT_CONFIG: AgentConfig = {
         fallbackModel: AIModels.LLAMA_4_SCOUT,
     },
     realtimeCodeFixer: {
-        name: AIModels.GLM_4_7_FLASH, // fast
+        name: AIModels.GLM_4_7_FLASH, // fast, catches issues during generation
         reasoning_effort: 'low' as const,
         max_tokens: 32000,
         temperature: 0.2,
         fallbackModel: AIModels.QWEN3_30B,
+    },
+    fastCodeFixer: {
+        name: AIModels.QWEN3_30B, // cheapest model with tool calling
+        reasoning_effort: 'low' as const,
+        max_tokens: 64000,
+        temperature: 0.0,
+        fallbackModel: AIModels.GLM_4_7_FLASH,
     },
     templateSelection: {
         name: AIModels.GLM_4_7_FLASH,
@@ -207,11 +214,11 @@ export const AGENT_CONFIG: AgentConfig = env.PLATFORM_MODEL_PROVIDERS
 
 export const AGENT_CONSTRAINTS: Map<AgentActionKey, AgentConstraintConfig> = new Map([
 	['fastCodeFixer', {
-		allowedModels: new Set([AIModels.DISABLED]),
+		allowedModels: new Set(LiteModels),
 		enabled: true,
 	}],
 	['realtimeCodeFixer', {
-		allowedModels: new Set([AIModels.DISABLED]),
+		allowedModels: new Set(LiteModels),
 		enabled: true,
 	}],
 	['fileRegeneration', {
