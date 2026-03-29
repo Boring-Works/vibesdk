@@ -10,6 +10,7 @@ import {
 	Eye,
 	EyeOff,
 } from 'lucide-react';
+// Github icon import available at '@/components/icons/github' when integrations section is uncommented
 import { ModelConfigTabs } from '@/components/model-config-tabs';
 import type {
 	ModelConfigsData,

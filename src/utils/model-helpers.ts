@@ -34,6 +34,15 @@ export function getProviderInfo(modelValue?: string): ProviderInfo {
 	if (modelValue.includes('google-ai-studio/') || modelValue.includes('gemini')) {
 		return { name: 'Google', color: 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400' };
 	}
+	if (modelValue.includes('moonshotai/') || modelValue.includes('kimi')) {
+		return { name: 'Kimi', color: 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900/20 dark:text-cyan-400' };
+	}
+	if (modelValue.includes('google-vertex-ai/')) {
+		return { name: 'Vertex AI', color: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/20 dark:text-indigo-400' };
+	}
+	if (modelValue.includes('grok/') || modelValue.includes('grok')) {
+		return { name: 'xAI', color: 'bg-slate-100 text-slate-800 dark:bg-slate-900/20 dark:text-slate-400' };
+	}
 
 	return { name: 'Custom', color: 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400' };
 }

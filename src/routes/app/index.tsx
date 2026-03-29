@@ -22,9 +22,9 @@ import {
 	Bookmark,
 	Globe,
 	Trash2,
-	Github,
 	GitBranch,
 } from 'lucide-react';
+import { Github } from '@/components/icons/github';
 import { MonacoEditor } from '@/components/monaco-editor/monaco-editor';
 import { getFileType } from '@/utils/string';
 import { Button } from '@/components/ui/button';

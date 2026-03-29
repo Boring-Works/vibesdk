@@ -1,15 +1,15 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-    X, 
-    Github, 
-    Lock, 
-    Globe, 
-    Upload, 
-    CheckCircle, 
-    AlertCircle, 
+import {
+    X,
+    Lock,
+    Globe,
+    Upload,
+    CheckCircle,
+    AlertCircle,
     Loader
 } from 'lucide-react';
+import { Github } from '@/components/icons/github';
 import { apiClient } from '@/lib/api-client';
 
 // Shared button styles
