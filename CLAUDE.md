@@ -133,6 +133,9 @@ Edit `/worker/agents/operations/UserConversationProcessor.ts` (system prompt lin
 - Cheap options available: Qwen3 30B ($0.05/M), Llama 4 Scout (vision)
 - Providers: `workers-ai,openrouter,google-vertex-ai`
 - Model config: `worker/agents/inferutils/config.ts` (defaults), `config.types.ts` (catalog)
+- DEFAULT_AGENT_CONFIG uses Gemini only (no Workers AI) -- activated when PLATFORM_MODEL_PROVIDERS unset
+- COMMON_AGENT_CONFIGS must stay Gemini-safe -- Workers AI overrides go in PLATFORM only
+- Technical debt tracked in `DEBT.md`
 
 **Workers AI Prompt Caching:**
 - `x-session-affinity: {agentId}` header added to Workers AI calls

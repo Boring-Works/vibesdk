@@ -9,33 +9,34 @@ import {
 } from "./config.types";
 import { env } from 'cloudflare:workers';
 
-// Common configs - best quality Workers AI models as defaults
+// Common configs shared by both platform and default configs
+// Uses Gemini models so DEFAULT_AGENT_CONFIG works without Workers AI
 const COMMON_AGENT_CONFIGS = {
     screenshotAnalysis: {
-        name: AIModels.KIMI_K2_5, // 256K, vision, reasoning -- best for screenshots
+        name: AIModels.DISABLED,
         reasoning_effort: 'medium' as const,
         max_tokens: 8000,
         temperature: 1,
-        fallbackModel: AIModels.LLAMA_4_SCOUT, // vision fallback
+        fallbackModel: AIModels.GEMINI_2_5_FLASH,
     },
     realtimeCodeFixer: {
-        name: AIModels.GLM_4_7_FLASH, // fast, 131K context, reasoning
+        name: AIModels.DISABLED,
         reasoning_effort: 'low' as const,
         max_tokens: 32000,
         temperature: 0.2,
-        fallbackModel: AIModels.QWEN3_30B,
+        fallbackModel: AIModels.GEMINI_2_5_FLASH,
     },
     fastCodeFixer: {
         name: AIModels.DISABLED,
         reasoning_effort: undefined,
         max_tokens: 64000,
         temperature: 0.0,
-        fallbackModel: AIModels.KIMI_K2_5,
+        fallbackModel: AIModels.GEMINI_2_5_PRO,
     },
     templateSelection: {
-        name: AIModels.GLM_4_7_FLASH, // fast + reasoning for quick template pick
+        name: AIModels.GEMINI_2_5_FLASH_LITE,
         max_tokens: 2000,
-        fallbackModel: AIModels.QWEN3_30B,
+        fallbackModel: AIModels.GEMINI_2_5_FLASH,
         temperature: 1,
     },
 } as const;
@@ -54,6 +55,27 @@ const SHARED_IMPLEMENTATION_CONFIG = {
 //======================================================================================
 const PLATFORM_AGENT_CONFIG: AgentConfig = {
     ...COMMON_AGENT_CONFIGS,
+    // Override common configs with Workers AI models for platform
+    screenshotAnalysis: {
+        name: AIModels.KIMI_K2_5, // vision + reasoning
+        reasoning_effort: 'medium' as const,
+        max_tokens: 8000,
+        temperature: 1,
+        fallbackModel: AIModels.LLAMA_4_SCOUT,
+    },
+    realtimeCodeFixer: {
+        name: AIModels.GLM_4_7_FLASH, // fast
+        reasoning_effort: 'low' as const,
+        max_tokens: 32000,
+        temperature: 0.2,
+        fallbackModel: AIModels.QWEN3_30B,
+    },
+    templateSelection: {
+        name: AIModels.GLM_4_7_FLASH,
+        max_tokens: 2000,
+        fallbackModel: AIModels.QWEN3_30B,
+        temperature: 1,
+    },
     blueprint: {
         name: AIModels.CLAUDE_4_6_OPUS, // best reasoning for architecture decisions
         reasoning_effort: 'high',

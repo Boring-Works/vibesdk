@@ -202,8 +202,11 @@ export class CodeGeneratorAgent extends Agent<Env, AgentState> implements AgentI
         await this.behavior.ensureTemplateDetails();
 
         // Restart sandbox health monitoring if instance exists but interval was lost (DO eviction)
+        // Non-blocking: don't delay onStart for a potentially slow sandbox health check
         if (this.state.sandboxInstanceId) {
-            await this.deploymentManager.verifyAndRestartHealthCheck();
+            void this.deploymentManager.verifyAndRestartHealthCheck().catch(err =>
+                this.logger().error('Failed to verify sandbox health on wake:', err)
+            );
         }
 
         this.logger().info(`Agent ${this.getAgentId()} session: ${this.state.sessionId} onStart processed successfully`);
