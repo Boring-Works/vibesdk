@@ -18,9 +18,18 @@ export function getModelDisplayName(modelValue?: string): string {
 export function getProviderInfo(modelValue?: string): ProviderInfo {
 	if (!modelValue) return { name: 'Default', color: 'bg-bg-3 text-text-tertiary' };
 
-	// Check specific prefixes first to avoid incorrect matches
+	// Check specific model names before provider prefixes
 	if (modelValue.includes('moonshotai/') || modelValue.includes('kimi')) {
 		return { name: 'Kimi', color: 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900/20 dark:text-cyan-400' };
+	}
+	if (modelValue.includes('nemotron') || modelValue.includes('nvidia/')) {
+		return { name: 'NVIDIA', color: 'bg-lime-100 text-lime-800 dark:bg-lime-900/20 dark:text-lime-400' };
+	}
+	if (modelValue.includes('glm') || modelValue.includes('zai-org/')) {
+		return { name: 'Zhipu', color: 'bg-teal-100 text-teal-800 dark:bg-teal-900/20 dark:text-teal-400' };
+	}
+	if (modelValue.startsWith('workersai/')) {
+		return { name: 'Workers AI', color: 'bg-amber-100 text-amber-800 dark:bg-amber-900/20 dark:text-amber-400' };
 	}
 	if (modelValue.includes('cerebras/')) {
 		return { name: 'Cerebras', color: 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400' };

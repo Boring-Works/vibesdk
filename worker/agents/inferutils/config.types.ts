@@ -328,17 +328,36 @@ const MODELS_MASTER = {
             contextSize: 262144, // 256K Context
         }
     },
-    // --- Kimi / Moonshot Models ---
-    // Routed via OpenRouter (CF AI Gateway has no native moonshotai provider)
+    // --- Workers AI Models ---
+    // Native on CF Workers AI since March 19 2026
     KIMI_K2_5: {
-        id: '[openrouter]moonshotai/kimi-k2.5',
+        id: 'workersai/@cf/moonshotai/kimi-k2.5',
         config: {
             name: 'Kimi K2.5',
             size: ModelSize.REGULAR,
-            provider: 'openrouter',
-            creditCost: 2.4, // $0.60/M input, $3.00/M output
+            provider: 'workersai',
+            creditCost: 2.4, // $0.60/M input, $3.00/M output, cached $0.10/M
             contextSize: 262144, // 256K Context
-            directOverride: true,
+        }
+    },
+    NEMOTRON_3_120B: {
+        id: 'workersai/@cf/nvidia/nemotron-3-120b-a12b',
+        config: {
+            name: 'NVIDIA Nemotron 3 120B',
+            size: ModelSize.REGULAR,
+            provider: 'workersai',
+            creditCost: 1.2, // MoE 120B total, 12B active
+            contextSize: 32768, // 32K Context
+        }
+    },
+    GLM_4_7_FLASH: {
+        id: 'workersai/@cf/zai-org/glm-4.7-flash',
+        config: {
+            name: 'GLM 4.7 Flash',
+            size: ModelSize.LITE,
+            provider: 'workersai',
+            creditCost: 0.4, // Fast, efficient
+            contextSize: 131072, // 131K Context
         }
     },
     QWEN_3_CODER_480B: {
