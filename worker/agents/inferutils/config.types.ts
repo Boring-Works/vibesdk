@@ -329,14 +329,16 @@ const MODELS_MASTER = {
         }
     },
     // --- Kimi / Moonshot Models ---
+    // Routed via OpenRouter (CF AI Gateway has no native moonshotai provider)
     KIMI_K2_5: {
-        id: 'moonshotai/kimi-k2.5',
+        id: '[openrouter]moonshotai/kimi-k2.5',
         config: {
             name: 'Kimi K2.5',
             size: ModelSize.REGULAR,
-            provider: 'moonshotai',
+            provider: 'openrouter',
             creditCost: 2.4, // $0.60/M input, $3.00/M output
             contextSize: 262144, // 256K Context
+            directOverride: true,
         }
     },
     QWEN_3_CODER_480B: {
@@ -384,11 +386,6 @@ export const RegularModels: AIModels[] = Object.values(MODELS_MASTER)
 
 export const AllModels: AIModels[] = Object.values(MODELS_MASTER)
     .map((entry) => entry.id);
-
-export interface AgentConstraintConfig {
-    allowedModels: Set<AIModels>;
-    enabled: boolean;
-}
 
 export interface AgentConstraintConfig {
     allowedModels: Set<AIModels>;

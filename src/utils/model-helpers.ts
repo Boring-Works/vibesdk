@@ -19,6 +19,9 @@ export function getProviderInfo(modelValue?: string): ProviderInfo {
 	if (!modelValue) return { name: 'Default', color: 'bg-bg-3 text-text-tertiary' };
 
 	// Check specific prefixes first to avoid incorrect matches
+	if (modelValue.includes('moonshotai/') || modelValue.includes('kimi')) {
+		return { name: 'Kimi', color: 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900/20 dark:text-cyan-400' };
+	}
 	if (modelValue.includes('cerebras/')) {
 		return { name: 'Cerebras', color: 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-400' };
 	}
@@ -33,9 +36,6 @@ export function getProviderInfo(modelValue?: string): ProviderInfo {
 	}
 	if (modelValue.includes('google-ai-studio/') || modelValue.includes('gemini')) {
 		return { name: 'Google', color: 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400' };
-	}
-	if (modelValue.includes('moonshotai/') || modelValue.includes('kimi')) {
-		return { name: 'Kimi', color: 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900/20 dark:text-cyan-400' };
 	}
 	if (modelValue.includes('google-vertex-ai/')) {
 		return { name: 'Vertex AI', color: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/20 dark:text-indigo-400' };
