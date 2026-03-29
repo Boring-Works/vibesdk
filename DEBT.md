@@ -42,7 +42,12 @@
 **Why carrying:** The `AgentContext` type is still exported by the agents package (backwards compat) but the docs now use `getCurrentAgent()` pattern. This is upstream vibesdk code.
 **Resolve when:** Upstream updates their agents SDK usage pattern.
 
-### D9: `compatibility_date` is `2025-08-10` (7 months stale)
+### D9: DeepSeek R1 Distill as debugger fallback may degrade with system prompt
+**File:** `worker/agents/inferutils/config.ts` (deepDebugger fallback)
+**Why carrying:** DeepSeek R1 docs say "avoid system prompts, put all instructions in user prompt." Our debugger uses a system prompt. As a fallback it only fires if Sonnet 4.6 fails.
+**Resolve when:** DeepSeek R1 is promoted to primary for any agent.
+
+### D10: `compatibility_date` is `2025-08-10` (7 months stale)
 **File:** `wrangler.jsonc:9`
 **Why carrying:** Upstream vibesdk sets this deliberately. Bumping could change runtime behavior for nodejs_compat polyfills and DO deleteAll semantics.
 **Resolve when:** Upstream bumps their compat date, or we need a specific newer feature.

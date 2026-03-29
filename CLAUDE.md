@@ -125,12 +125,15 @@ Edit `/worker/agents/operations/UserConversationProcessor.ts` (system prompt lin
 - Cannot run during code generation (checked via isCodeGenerating())
 
 **Model Strategy (PLATFORM_AGENT_CONFIG):**
-- Blueprint: Claude Opus 4.6 (OpenRouter) -- architecture decisions, highest quality
-- Deep Debugger: Claude Sonnet 4.6 (OpenRouter) -- root cause analysis
-- Phase Gen/Impl, Chat, Agentic: Kimi K2.5 (Workers AI) -- 256K, reasoning, vision
-- Project Setup, File Regen: Nemotron 3 120B (Workers AI) -- MoE, tool calling
-- Template Selection, Code Fixer: GLM 4.7 Flash (Workers AI) -- fast, cheap
-- Cheap options available: Qwen3 30B ($0.05/M), Llama 4 Scout (vision)
+- Blueprint: Claude Opus 4.6 (OpenRouter, temp 1.0) -> GPT-OSS 120B fallback
+- Deep Debugger: Claude Sonnet 4.6 (OpenRouter, temp 0.6) -> DeepSeek R1 fallback
+- Phase Gen/Impl: Kimi K2.5 (Workers AI, temp 0.6) -> Nemotron 3 / GPT-OSS fallback
+- Conversational: GLM 4.7 Flash (Workers AI, temp 0.7) -> Mistral Small fallback
+- File Regen: Qwen2.5 Coder 32B (Workers AI, temp 0.7) -> GPT-OSS fallback
+- Template/Fast Fixer: Granite 4.0 Micro (Workers AI, temp 0.0) -- cheapest
+- Realtime Fixer: GLM Flash (temp 0.7), Fast Fixer: Granite Micro (temp 0.0) -- both enabled
+- All temps from official model creator docs, not arbitrary
+- 13 Workers AI models in catalog, 2 OpenRouter (Claude 4.6)
 - Providers: `workers-ai,openrouter,google-vertex-ai`
 - Model config: `worker/agents/inferutils/config.ts` (defaults), `config.types.ts` (catalog)
 - DEFAULT_AGENT_CONFIG uses Gemini only (no Workers AI) -- activated when PLATFORM_MODEL_PROVIDERS unset
