@@ -172,6 +172,37 @@ export class DeploymentManager extends BaseAgentService<BaseProjectState> implem
     }
 
     /**
+     * Verify sandbox health and restart monitoring after DO eviction.
+     * Call from onStart when sandboxInstanceId exists in persistent state
+     * but healthCheckInterval (ephemeral memory) was lost.
+     */
+    async verifyAndRestartHealthCheck(): Promise<void> {
+        const { sandboxInstanceId } = this.getState();
+        const logger = this.getLog();
+
+        if (!sandboxInstanceId) return;
+        if (this.healthCheckInterval !== null) return; // Already running
+
+        logger.info(`Restarting health check for existing sandbox ${sandboxInstanceId} after DO wake`);
+
+        try {
+            const client = this.getClient();
+            const status = await client.getInstanceStatus(sandboxInstanceId);
+
+            if (status.success && status.isHealthy) {
+                this.startHealthCheckInterval(sandboxInstanceId);
+                logger.info(`Sandbox ${sandboxInstanceId} is healthy, health check restarted`);
+            } else {
+                logger.warn(`Sandbox ${sandboxInstanceId} is unhealthy after DO wake, triggering redeploy`);
+                void this.deployToSandbox().catch(err => logger.error('Failed to redeploy after health check failure:', err));
+            }
+        } catch (err) {
+            logger.error('Failed to verify sandbox health on wake:', err);
+            void this.deployToSandbox().catch(e => logger.error('Failed to redeploy after health check error:', e));
+        }
+    }
+
+    /**
      * Start health check interval for instance
      */
     private startHealthCheckInterval(instanceId: string): void {
@@ -689,7 +720,7 @@ export class DeploymentManager extends BaseAgentService<BaseProjectState> implem
             if (deploymentResult?.error?.includes('Failed to read instance metadata') || 
                 deploymentResult?.error?.includes(`/bin/sh: 1: cd: can't cd to i-`)) {
                 logger.error('Deployment sandbox died - preview expired');
-                this.deployToSandbox();
+                void this.deployToSandbox().catch(err => logger.error('Failed to redeploy sandbox after expiry:', err));
             } else {
                 callbacks?.onError?.({
                     message: `Deployment failed: ${deploymentResult?.message || 'Unknown error'}`,

@@ -131,7 +131,10 @@ export class PhaseImplementationOperation extends AgentOperation<PhasicGeneratio
                                         template: context.templateDetails
                                     },
                                     phase
-                                );
+                                ).catch((err) => {
+                                    console.error(`Realtime code fixer failed for ${filePath}, using original:`, err instanceof Error ? err.message : String(err));
+                                    return generatedFile;
+                                });
                                 fixedFilePromises.push(fixPromise);
                             } else {
                                 fixedFilePromises.push(Promise.resolve(generatedFile));

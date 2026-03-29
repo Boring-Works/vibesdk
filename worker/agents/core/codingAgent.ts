@@ -200,6 +200,12 @@ export class CodeGeneratorAgent extends Agent<Env, AgentState> implements AgentI
         await this.gitInit();
         
         await this.behavior.ensureTemplateDetails();
+
+        // Restart sandbox health monitoring if instance exists but interval was lost (DO eviction)
+        if (this.state.sandboxInstanceId) {
+            await this.deploymentManager.verifyAndRestartHealthCheck();
+        }
+
         this.logger().info(`Agent ${this.getAgentId()} session: ${this.state.sessionId} onStart processed successfully`);
 
         // Load the latest user configs

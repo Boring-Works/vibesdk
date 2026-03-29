@@ -2,8 +2,8 @@
  * Centralized API types - imports and re-exports types from worker
  * This file serves as the single source of truth for frontend-worker API communication
  */
-import { SessionResponse } from 'worker/utils/authUtils';
-import { AuthUser } from './api-types';
+import type { SessionResponse } from 'worker/utils/authUtils';
+import type { AuthUser } from 'worker/types/auth-types';
 
 export type { SecretTemplate } from 'worker/types/secretsTemplates';
 

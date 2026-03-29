@@ -3,7 +3,7 @@
  * Provides OAuth + Email/Password authentication with backward compatibility
  */
 
-import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router';
 import { apiClient, ApiError } from '@/lib/api-client';
 import { useSentryUser } from '@/hooks/useSentryUser';
@@ -305,7 +305,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setError(null);
   }, []);
 
-  const value: AuthContextType = {
+  const value: AuthContextType = useMemo(() => ({
     user,
     token,
     session,
@@ -315,8 +315,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     authProviders,
     hasOAuth,
     requiresEmailAuth,
-    login, // OAuth method with redirect support
-    loginWithEmail, // Email/password method
+    login,
+    loginWithEmail,
     register,
     logout,
     refreshUser,
@@ -324,7 +324,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIntendedUrl,
     getIntendedUrl,
     clearIntendedUrl,
-  };
+  }), [user, token, session, isLoading, error, authProviders, hasOAuth, requiresEmailAuth, login, loginWithEmail, register, logout, refreshUser, clearError, setIntendedUrl, getIntendedUrl, clearIntendedUrl]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

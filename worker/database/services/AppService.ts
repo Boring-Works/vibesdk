@@ -1013,44 +1013,17 @@ export class AppService extends BaseService {
                 return { success: false, error: 'You can only delete your own apps' };
             }
 
-            // Delete related records first (foreign key constraints)
-            // This follows the cascade delete pattern for data integrity
-            
-            // Delete favorites
-            await this.database
-                .delete(schema.favorites)
-                .where(eq(schema.favorites.appId, appId));
-            
-            // Delete stars  
-            await this.database
-                .delete(schema.stars)
-                .where(eq(schema.stars.appId, appId));
-            
-            // Delete app views
-            await this.database
-                .delete(schema.appViews)
-                .where(eq(schema.appViews.appId, appId));
-            
-            // Handle fork relationships properly
-            // If this app is a parent, make forks independent (don't delete them!)
-            await this.database
-                .update(schema.apps)
-                .set({ parentAppId: null })
-                .where(eq(schema.apps.parentAppId, appId));
-            
-            // If this app is a fork, we don't need to do anything special
-            // (the parent fork count will be handled by analytics recalculation)
-            
-            // Finally delete the app itself
-            const deleteResult = await this.database
-                .delete(schema.apps)
-                .where(and(
-                    eq(schema.apps.id, appId),
-                    eq(schema.apps.userId, userId)
-                ))
-                .returning({ id: schema.apps.id });
+            // Atomic cascade delete using D1 batch
+            const batchResult = await this.database.batch([
+                this.database.delete(schema.favorites).where(eq(schema.favorites.appId, appId)),
+                this.database.delete(schema.stars).where(eq(schema.stars.appId, appId)),
+                this.database.delete(schema.appViews).where(eq(schema.appViews.appId, appId)),
+                this.database.update(schema.apps).set({ parentAppId: null }).where(eq(schema.apps.parentAppId, appId)),
+                this.database.delete(schema.apps).where(and(eq(schema.apps.id, appId), eq(schema.apps.userId, userId))),
+            ]);
 
-            if (deleteResult.length === 0) {
+            const deleteResult = batchResult[4] as unknown as { id: string }[];
+            if (!deleteResult || !Array.isArray(deleteResult) || deleteResult.length === 0) {
                 return { success: false, error: 'Failed to delete app - app may have been already deleted' };
             }
 
