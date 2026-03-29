@@ -37,7 +37,12 @@
 **Why carrying:** Constructor cannot be async. Moving to onStart requires restructuring initialization order. Risk of breaking existing DO instances.
 **Resolve when:** DO storage errors are observed in production logs.
 
-### D8: `compatibility_date` is `2025-08-10` (7 months stale)
+### D8: `AgentContext` import deprecated in agents SDK 0.8
+**File:** `worker/agents/core/codingAgent.ts:1`
+**Why carrying:** The `AgentContext` type is still exported by the agents package (backwards compat) but the docs now use `getCurrentAgent()` pattern. This is upstream vibesdk code.
+**Resolve when:** Upstream updates their agents SDK usage pattern.
+
+### D9: `compatibility_date` is `2025-08-10` (7 months stale)
 **File:** `wrangler.jsonc:9`
 **Why carrying:** Upstream vibesdk sets this deliberately. Bumping could change runtime behavior for nodejs_compat polyfills and DO deleteAll semantics.
 **Resolve when:** Upstream bumps their compat date, or we need a specific newer feature.
