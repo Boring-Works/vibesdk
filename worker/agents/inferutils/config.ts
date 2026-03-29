@@ -9,33 +9,33 @@ import {
 } from "./config.types";
 import { env } from 'cloudflare:workers';
 
-// Common configs - these are good defaults
+// Common configs - Workers AI first, OpenRouter fallback
 const COMMON_AGENT_CONFIGS = {
     screenshotAnalysis: {
-        name: AIModels.DISABLED,
+        name: AIModels.KIMI_K2_5, // vision support
         reasoning_effort: 'medium' as const,
         max_tokens: 8000,
         temperature: 1,
-        fallbackModel: AIModels.GEMINI_2_5_FLASH,
+        fallbackModel: AIModels.GLM_4_7_FLASH,
     },
     realtimeCodeFixer: {
-        name: AIModels.GROK_4_1_FAST_NON_REASONING,
+        name: AIModels.GLM_4_7_FLASH,
         reasoning_effort: 'low' as const,
         max_tokens: 32000,
         temperature: 0.2,
-        fallbackModel: AIModels.GEMINI_2_5_FLASH,
+        fallbackModel: AIModels.NEMOTRON_3_120B,
     },
     fastCodeFixer: {
         name: AIModels.DISABLED,
         reasoning_effort: undefined,
         max_tokens: 64000,
         temperature: 0.0,
-        fallbackModel: AIModels.GEMINI_2_5_PRO,
+        fallbackModel: AIModels.KIMI_K2_5,
     },
     templateSelection: {
-        name: AIModels.GEMINI_2_5_FLASH_LITE,
+        name: AIModels.GLM_4_7_FLASH, // fast, cheap
         max_tokens: 2000,
-        fallbackModel: AIModels.GROK_4_1_FAST_NON_REASONING,
+        fallbackModel: AIModels.NEMOTRON_3_120B,
         temperature: 1,
     },
 } as const;
@@ -44,7 +44,7 @@ const SHARED_IMPLEMENTATION_CONFIG = {
     reasoning_effort: 'low' as const,
     max_tokens: 48000,
     temperature: 1,
-    fallbackModel: AIModels.GEMINI_2_5_PRO,
+    fallbackModel: AIModels.NEMOTRON_3_120B,
 };
 
 //======================================================================================
@@ -58,61 +58,61 @@ Cloudflare AI Gateway unified billing for seamless model access without managing
 const PLATFORM_AGENT_CONFIG: AgentConfig = {
     ...COMMON_AGENT_CONFIGS,
     blueprint: {
-        name: AIModels.GEMINI_3_PRO_PREVIEW,
+        name: AIModels.KIMI_K2_5, // 256K context, reasoning, vision
         reasoning_effort: 'high',
         max_tokens: 20000,
-        fallbackModel: AIModels.GEMINI_2_5_FLASH,
+        fallbackModel: AIModels.NEMOTRON_3_120B,
         temperature: 1.0,
     },
     projectSetup: {
-        name: AIModels.GROK_4_1_FAST,
+        name: AIModels.NEMOTRON_3_120B, // tool calling, fast
         reasoning_effort: 'medium',
         max_tokens: 8000,
         temperature: 1,
-        fallbackModel: AIModels.GEMINI_2_5_PRO,
+        fallbackModel: AIModels.KIMI_K2_5,
     },
     phaseGeneration: {
-        name: AIModels.GEMINI_3_FLASH_PREVIEW,
+        name: AIModels.KIMI_K2_5,
         reasoning_effort: 'medium',
         max_tokens: 8000,
         temperature: 1,
-        fallbackModel: AIModels.OPENAI_5_MINI,
+        fallbackModel: AIModels.GLM_4_7_FLASH,
     },
     firstPhaseImplementation: {
-        name: AIModels.GEMINI_3_FLASH_PREVIEW,
+        name: AIModels.KIMI_K2_5, // 256K for large initial codegen
         ...SHARED_IMPLEMENTATION_CONFIG,
     },
     phaseImplementation: {
-        name: AIModels.GEMINI_3_FLASH_PREVIEW,
+        name: AIModels.KIMI_K2_5,
         ...SHARED_IMPLEMENTATION_CONFIG,
     },
     conversationalResponse: {
-        name: AIModels.GROK_4_1_FAST,
+        name: AIModels.GLM_4_7_FLASH, // fast for chat
         reasoning_effort: 'low',
         max_tokens: 4000,
         temperature: 1,
-        fallbackModel: AIModels.GEMINI_2_5_FLASH,
+        fallbackModel: AIModels.KIMI_K2_5,
     },
     deepDebugger: {
-        name: AIModels.GROK_4_1_FAST,
+        name: AIModels.KIMI_K2_5, // reasoning for debugging
         reasoning_effort: 'high',
         max_tokens: 8000,
         temperature: 1,
-        fallbackModel: AIModels.GEMINI_2_5_PRO,
+        fallbackModel: AIModels.NEMOTRON_3_120B,
     },
     fileRegeneration: {
-        name: AIModels.GROK_4_1_FAST_NON_REASONING,
+        name: AIModels.NEMOTRON_3_120B, // code-focused MoE
         reasoning_effort: 'low',
         max_tokens: 16000,
         temperature: 0.0,
-        fallbackModel: AIModels.GROK_CODE_FAST_1,
+        fallbackModel: AIModels.GLM_4_7_FLASH,
     },
     agenticProjectBuilder: {
-        name: AIModels.GEMINI_3_FLASH_PREVIEW,
+        name: AIModels.KIMI_K2_5, // tool calling + 256K
         reasoning_effort: 'medium',
         max_tokens: 8000,
         temperature: 1,
-        fallbackModel: AIModels.GEMINI_2_5_PRO,
+        fallbackModel: AIModels.NEMOTRON_3_120B,
     },
 };
 
