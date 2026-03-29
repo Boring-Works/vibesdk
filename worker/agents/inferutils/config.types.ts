@@ -328,6 +328,17 @@ const MODELS_MASTER = {
             contextSize: 262144, // 256K Context
         }
     },
+    // --- Kimi / Moonshot Models ---
+    KIMI_K2_5: {
+        id: 'moonshotai/kimi-k2.5',
+        config: {
+            name: 'Kimi K2.5',
+            size: ModelSize.REGULAR,
+            provider: 'moonshotai',
+            creditCost: 2.4, // $0.60/M input, $3.00/M output
+            contextSize: 262144, // 256K Context
+        }
+    },
     QWEN_3_CODER_480B: {
         id: 'google-vertex-ai/qwen/qwen3-coder-480b-a35b-instruct-maas',
         config: {
