@@ -353,61 +353,61 @@ const MODELS_MASTER = {
     // --- Workers AI Models ---
     // Native on CF Workers AI since March 19 2026
     KIMI_K2_5: {
-        id: 'workersai/@cf/moonshotai/kimi-k2.5',
+        id: 'workers-ai/@cf/moonshotai/kimi-k2.5',
         config: {
             name: 'Kimi K2.5',
             size: ModelSize.REGULAR,
-            provider: 'workersai',
+            provider: 'workers-ai',
             creditCost: 2.4, // $0.60/M input, $3.00/M output, cached $0.10/M
             contextSize: 262144, // 256K Context
         }
     },
     NEMOTRON_3_120B: {
-        id: 'workersai/@cf/nvidia/nemotron-3-120b-a12b',
+        id: 'workers-ai/@cf/nvidia/nemotron-3-120b-a12b',
         config: {
             name: 'NVIDIA Nemotron 3 120B',
             size: ModelSize.REGULAR,
-            provider: 'workersai',
+            provider: 'workers-ai',
             creditCost: 1.2, // MoE 120B total, 12B active
             contextSize: 32768, // 32K Context
         }
     },
     GLM_4_7_FLASH: {
-        id: 'workersai/@cf/zai-org/glm-4.7-flash',
+        id: 'workers-ai/@cf/zai-org/glm-4.7-flash',
         config: {
             name: 'GLM 4.7 Flash',
             size: ModelSize.LITE,
-            provider: 'workersai',
+            provider: 'workers-ai',
             creditCost: 0.4, // Fast, efficient
             contextSize: 131072, // 131K Context
         }
     },
     QWEN3_30B: {
-        id: 'workersai/@cf/qwen/qwen3-30b-a3b-fp8',
+        id: 'workers-ai/@cf/qwen/qwen3-30b-a3b-fp8',
         config: {
             name: 'Qwen3 30B',
             size: ModelSize.LITE,
-            provider: 'workersai',
+            provider: 'workers-ai',
             creditCost: 0.2, // $0.05/M input, $0.34/M output -- cheapest with tools
             contextSize: 32768, // 32K Context
         }
     },
     GPT_OSS_120B: {
-        id: 'workersai/@cf/openai/gpt-oss-120b',
+        id: 'workers-ai/@cf/openai/gpt-oss-120b',
         config: {
             name: 'GPT-OSS 120B',
             size: ModelSize.REGULAR,
-            provider: 'workersai',
+            provider: 'workers-ai',
             creditCost: 0.6, // $0.35/M input, $0.75/M output
             contextSize: 131072, // 128K Context
         }
     },
     LLAMA_4_SCOUT: {
-        id: 'workersai/@cf/meta/llama-4-scout-17b-16e-instruct',
+        id: 'workers-ai/@cf/meta/llama-4-scout-17b-16e-instruct',
         config: {
             name: 'Llama 4 Scout 17B',
             size: ModelSize.LITE,
-            provider: 'workersai',
+            provider: 'workers-ai',
             creditCost: 0.4, // $0.27/M input, $0.85/M output, vision + tools
             contextSize: 131072, // 128K Context
         }

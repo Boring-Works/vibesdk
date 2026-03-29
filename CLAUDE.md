@@ -131,7 +131,7 @@ Edit `/worker/agents/operations/UserConversationProcessor.ts` (system prompt lin
 - Project Setup, File Regen: Nemotron 3 120B (Workers AI) -- MoE, tool calling
 - Template Selection, Code Fixer: GLM 4.7 Flash (Workers AI) -- fast, cheap
 - Cheap options available: Qwen3 30B ($0.05/M), Llama 4 Scout (vision)
-- Providers: `workersai,openrouter,google-vertex-ai`
+- Providers: `workers-ai,openrouter,google-vertex-ai`
 - Model config: `worker/agents/inferutils/config.ts` (defaults), `config.types.ts` (catalog)
 
 **Custom Icons:**

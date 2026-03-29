@@ -37,7 +37,7 @@ export function getProviderInfo(modelValue?: string): ProviderInfo {
 	if (modelValue.includes('gpt-oss')) {
 		return { name: 'GPT-OSS', color: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/20 dark:text-emerald-400' };
 	}
-	if (modelValue.startsWith('workersai/')) {
+	if (modelValue.startsWith('workers-ai/')) {
 		return { name: 'Workers AI', color: 'bg-amber-100 text-amber-800 dark:bg-amber-900/20 dark:text-amber-400' };
 	}
 	if (modelValue.includes('cerebras/')) {
