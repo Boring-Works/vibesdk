@@ -160,7 +160,7 @@
                     "enabled": true
                 },
                 "general": {
-                    "enabled": false
+                    "enabled": true
                 }
             },
             "version": "1.0.0"
