@@ -28,6 +28,15 @@ export function getProviderInfo(modelValue?: string): ProviderInfo {
 	if (modelValue.includes('glm') || modelValue.includes('zai-org/')) {
 		return { name: 'Zhipu', color: 'bg-teal-100 text-teal-800 dark:bg-teal-900/20 dark:text-teal-400' };
 	}
+	if (modelValue.includes('qwen') || modelValue.includes('qwq')) {
+		return { name: 'Qwen', color: 'bg-violet-100 text-violet-800 dark:bg-violet-900/20 dark:text-violet-400' };
+	}
+	if (modelValue.includes('llama') || modelValue.includes('meta/')) {
+		return { name: 'Meta', color: 'bg-sky-100 text-sky-800 dark:bg-sky-900/20 dark:text-sky-400' };
+	}
+	if (modelValue.includes('gpt-oss')) {
+		return { name: 'GPT-OSS', color: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/20 dark:text-emerald-400' };
+	}
 	if (modelValue.startsWith('workersai/')) {
 		return { name: 'Workers AI', color: 'bg-amber-100 text-amber-800 dark:bg-amber-900/20 dark:text-amber-400' };
 	}

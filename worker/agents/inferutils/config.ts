@@ -9,21 +9,21 @@ import {
 } from "./config.types";
 import { env } from 'cloudflare:workers';
 
-// Common configs - Workers AI first, OpenRouter fallback
+// Common configs - best quality Workers AI models as defaults
 const COMMON_AGENT_CONFIGS = {
     screenshotAnalysis: {
-        name: AIModels.KIMI_K2_5, // vision support
+        name: AIModels.KIMI_K2_5, // 256K, vision, reasoning -- best for screenshots
         reasoning_effort: 'medium' as const,
         max_tokens: 8000,
         temperature: 1,
-        fallbackModel: AIModels.GLM_4_7_FLASH,
+        fallbackModel: AIModels.LLAMA_4_SCOUT, // vision fallback
     },
     realtimeCodeFixer: {
-        name: AIModels.GLM_4_7_FLASH,
+        name: AIModels.GLM_4_7_FLASH, // fast, 131K context, reasoning
         reasoning_effort: 'low' as const,
         max_tokens: 32000,
         temperature: 0.2,
-        fallbackModel: AIModels.NEMOTRON_3_120B,
+        fallbackModel: AIModels.QWEN3_30B,
     },
     fastCodeFixer: {
         name: AIModels.DISABLED,
@@ -33,9 +33,9 @@ const COMMON_AGENT_CONFIGS = {
         fallbackModel: AIModels.KIMI_K2_5,
     },
     templateSelection: {
-        name: AIModels.GLM_4_7_FLASH, // fast, cheap
+        name: AIModels.GLM_4_7_FLASH, // fast + reasoning for quick template pick
         max_tokens: 2000,
-        fallbackModel: AIModels.NEMOTRON_3_120B,
+        fallbackModel: AIModels.QWEN3_30B,
         temperature: 1,
     },
 } as const;
@@ -87,11 +87,11 @@ const PLATFORM_AGENT_CONFIG: AgentConfig = {
         ...SHARED_IMPLEMENTATION_CONFIG,
     },
     conversationalResponse: {
-        name: AIModels.GLM_4_7_FLASH, // fast for chat
+        name: AIModels.KIMI_K2_5, // best quality for user-facing chat
         reasoning_effort: 'low',
         max_tokens: 4000,
         temperature: 1,
-        fallbackModel: AIModels.KIMI_K2_5,
+        fallbackModel: AIModels.GLM_4_7_FLASH,
     },
     deepDebugger: {
         name: AIModels.KIMI_K2_5, // reasoning for debugging

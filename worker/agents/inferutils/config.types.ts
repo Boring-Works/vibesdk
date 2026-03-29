@@ -360,6 +360,36 @@ const MODELS_MASTER = {
             contextSize: 131072, // 131K Context
         }
     },
+    QWEN3_30B: {
+        id: 'workersai/@cf/qwen/qwen3-30b-a3b-fp8',
+        config: {
+            name: 'Qwen3 30B',
+            size: ModelSize.LITE,
+            provider: 'workersai',
+            creditCost: 0.2, // $0.05/M input, $0.34/M output -- cheapest with tools
+            contextSize: 32768, // 32K Context
+        }
+    },
+    GPT_OSS_120B: {
+        id: 'workersai/@cf/openai/gpt-oss-120b',
+        config: {
+            name: 'GPT-OSS 120B',
+            size: ModelSize.REGULAR,
+            provider: 'workersai',
+            creditCost: 0.6, // $0.35/M input, $0.75/M output
+            contextSize: 131072, // 128K Context
+        }
+    },
+    LLAMA_4_SCOUT: {
+        id: 'workersai/@cf/meta/llama-4-scout-17b-16e-instruct',
+        config: {
+            name: 'Llama 4 Scout 17B',
+            size: ModelSize.LITE,
+            provider: 'workersai',
+            creditCost: 0.4, // $0.27/M input, $0.85/M output, vision + tools
+            contextSize: 131072, // 128K Context
+        }
+    },
     QWEN_3_CODER_480B: {
         id: 'google-vertex-ai/qwen/qwen3-coder-480b-a35b-instruct-maas',
         config: {
