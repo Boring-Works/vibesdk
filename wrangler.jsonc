@@ -4,7 +4,7 @@
  */
  {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "vibesdk-production",
+	"name": "boringbuilder",
 	"main": "worker/index.ts",
 	"compatibility_date": "2025-08-10",
 	"compatibility_flags": ["nodejs_compat"],
@@ -51,21 +51,21 @@
     "dispatch_namespaces": [
         {
             "binding": "DISPATCHER",
-            "namespace": "vibesdk-default-namespace",
+            "namespace": "boringbuilder-apps",
             "remote": true
         }
     ],
 	"containers": [
 		{
 			"class_name": "UserAppSandboxService",
-			"image": "./SandboxDockerfile",
-            // "image": "registry.cloudflare.com/vibesdk-production-userappsandboxservice:cfe197fc",
+			// "image": "./SandboxDockerfile",
+            "image": "registry.cloudflare.com/boringbuilder-userappsandboxservice:ef7cf12c",
             // Altering max_instances value will have no effect. Please use the MAX_SANDBOX_INSTANCES var instead.
-			"max_instances": 1400,
+			"max_instances": 10,
             // ATTENTION: Altering instance_type value will have no effect. Please use the SANDBOX_INSTANCE_TYPE var instead.
             "instance_type": {
                 "vcpu": 4,
-                "memory_mib": 8192,
+                "memory_mib": 12288,
                 "disk_mb": 10240
             },
             "rollout_step_percentage": 100
@@ -74,8 +74,8 @@
 	"d1_databases": [
 		{
 			"binding": "DB",
-			"database_name": "vibesdk-db",
-			"database_id": "c4721a2b-b96a-428a-8b2a-b3d255b307e9",
+			"database_name": "boringbuilder-db",
+			"database_id": "1b935239-1117-4481-bcd8-b3393a6ee55a",
 			"migrations_dir": "migrations",
 			"remote": true
 		}
@@ -103,14 +103,14 @@
     "r2_buckets": [
       {
         "binding": "TEMPLATES_BUCKET",
-        "bucket_name": "vibesdk-templates",
+        "bucket_name": "boringbuilder-templates",
         "remote": true
       }
     ],
     "kv_namespaces": [
         {
             "binding": "VibecoderStore",
-            "id": "f066f3c2e4824981b48e8586c04db9c1",
+            "id": "d0312f7971c942068f666c01b2d19f33",
             "remote": true
         }
     ],
@@ -140,28 +140,24 @@
 	],
 	"routes": [
         {
-            "pattern": "build.cloudflare.dev",
+            "pattern": "build.getboring.io",
             "custom_domain": true
-        },
-        {
-            "pattern": "*build-preview.cloudflare.dev/*",
-            "custom_domain": false,
-            "zone_id": "db01fac4261b2604aacad8410443a3e2"
         }
     ],
 	"vars": {
-        "TEMPLATES_REPOSITORY": "https://github.com/cloudflare/vibesdk-templates",
-        "ALLOWED_EMAIL": "",
-        "DISPATCH_NAMESPACE": "vibesdk-default-namespace",
-        "ENABLE_READ_REPLICAS": "true",
-        "CLOUDFLARE_AI_GATEWAY": "vibesdk-gateway",
+        "TEMPLATES_REPOSITORY": "https://github.com/Boring-Works/vibesdk-templates",
+        "ALLOWED_EMAILS": "codyboring@me.com,barbstreet@jastreet.com,stevenhobbs76@yahoo.com",
+        "DISPATCH_NAMESPACE": "boringbuilder-apps",
+        "ENABLE_READ_REPLICAS": "false",
+        "CLOUDFLARE_AI_GATEWAY": "boringbuilder_gateway",
+        "PLATFORM_MODEL_PROVIDERS": "google-ai-studio,anthropic,deepseek,openrouter,grok,openai",
         "PLATFORM_CAPABILITIES": {
             "features": {
                 "app": {
                     "enabled": true
                 },
                 "presentation": {
-                    "enabled": false
+                    "enabled": true
                 },
                 "general": {
                     "enabled": false
@@ -169,9 +165,11 @@
             },
             "version": "1.0.0"
         },
-        "CUSTOM_DOMAIN": "",
+        "CUSTOM_DOMAIN": "build.getboring.io",
+        "CUSTOM_PREVIEW_DOMAIN": "getboring.io",
+        "WORKERS_DEV_HOSTNAME": "boringbuilder.codyboring.workers.dev",
         "MAX_SANDBOX_INSTANCES": "10",
-        "SANDBOX_INSTANCE_TYPE": "standard-3"
+        "SANDBOX_INSTANCE_TYPE": "standard-4"
     },
 	"workers_dev": false,
 	"preview_urls": false
