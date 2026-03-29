@@ -1,5 +1,7 @@
 import type { RefObject } from 'react';
-import { GitBranch, Github, Expand } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+import { GitBranch, Expand } from 'lucide-react';
+import { Github } from '@/components/icons/github';
 import { ModelConfigInfo } from '@/components/shared/ModelConfigInfo';
 import { HeaderButton } from '@/components/shared/header-actions';
 import type { ModelConfigsInfo } from '@/api-types';
@@ -38,7 +40,7 @@ export function BaseHeaderActions({
 			/>
 			{isGitHubExportReady && (
 				<HeaderButton
-					icon={Github}
+					icon={Github as unknown as LucideIcon}
 					label="GitHub"
 					onClick={onGitHubExportClick}
 					title="Export to GitHub"

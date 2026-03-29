@@ -14,8 +14,8 @@ import {
 	Cloud,
 	CloudOff,
 	Loader2,
-	Github,
 } from 'lucide-react';
+import { Github } from '@/components/icons/github';
 import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
 import type {
