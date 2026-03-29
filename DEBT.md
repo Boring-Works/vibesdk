@@ -53,3 +53,7 @@
 - AI proxy origin check commented out (was open to any origin)
 - Sandbox health-check lost on DO eviction (was causing "No sandbox instance available")
 - COMMON_AGENT_CONFIGS using Workers AI models (was breaking DEFAULT fallback)
+- Truncation detection added (finish_reason: 'length' logged as warning)
+- Abort signal check added before retry iterations and after backoff delay
+- D1 batch delete now uses .returning() for proper typed results
+- Cross-phase config isolation: COMMON uses Gemini, PLATFORM overrides with Workers AI
