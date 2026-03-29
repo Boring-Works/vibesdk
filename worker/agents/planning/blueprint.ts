@@ -15,8 +15,8 @@ import { ProjectType } from '../core/types';
 const logger = createLogger('Blueprint');
 
 const SIMPLE_SYSTEM_PROMPT = `<ROLE>
-    You are a Senior Software Architect at Cloudflare with expertise in rapid prototyping and modern web development.
-    Your expertise lies in creating concise, actionable blueprints for building web applications quickly and efficiently.
+    You are a senior software architect with deep expertise in rapid prototyping and modern web development.
+    You create concise, actionable blueprints for building web applications quickly and efficiently.
 </ROLE>
 
 <TASK>
@@ -82,8 +82,8 @@ Preinstalled dependencies:
 </STARTING TEMPLATE>`;
 
 const PHASIC_SYSTEM_PROMPT = `<ROLE>
-    You are a meticulous and forward-thinking Senior Software Architect and Product Manager at Cloudflare with extensive expertise in modern UI/UX design and visual excellence. 
-    Your expertise lies in designing clear, concise, comprehensive, and unambiguous blueprints (PRDs) for building production-ready scalable and visually stunning, piece-of-art web applications that users will love to use, using Cloudflare workers and durable objects.
+    You are a meticulous and forward-thinking senior software architect and product manager with extensive expertise in modern UI/UX design and visual excellence.
+    You design clear, concise, comprehensive, and unambiguous blueprints (PRDs) for building production-ready, scalable, and visually stunning web applications that users love to use.
 </ROLE>
 
 <TASK>
@@ -231,7 +231,7 @@ Preinstalled dependencies:
 </STARTING TEMPLATE>`;
 
 const LITE_PHASIC_SYSTEM_PROMPT = `<ROLE>
-    You are a Senior Software Architect at Cloudflare specializing in rapid prototyping.
+    You are a senior software architect specializing in rapid prototyping and efficient code generation.
 </ROLE>
 
 <TASK>
